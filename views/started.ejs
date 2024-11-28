@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Process Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f5f9ed;
+        }
+        .qr-section {
+            flex: 3; /* Occupies 3/4 of the page */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            border-right: 1px solid #ccc;
+            padding: 0; /* Remove padding to maximize space */
+        }
+        .qr-section img {
+            max-width: 90%; /* Image takes up 90% of the QR section */
+            max-height: 90%; /* Ensures the image stays responsive */
+            width: auto;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+        .panel-section {
+            flex: 1; /* Occupies 1/4 of the page */
+            padding: 40px;
+            background-color: #f5f9ed;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .progress-bar {
+            height: 6px;
+            width: 100%;
+            background: #eee;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-bar .progress {
+            height: 100%;
+            background: #4b7f52;
+            width: 33%; /* Adjust percentage for progress */
+            transition: width 0.3s;
+        }
+        .instructions {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 18px;
+            text-align: center;
+        }
+        .buttons {
+            text-align: center;
+        }
+        .buttons button {
+            padding: 12px 24px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4b7f52;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .buttons button:hover {
+            background-color: #3e6b44;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Left QR Section -->
+<div class="qr-section">
+    <img src="<%= data %>" alt="QR Code">
+</div>
+
+<!-- Right Panel Section -->
+<div class="panel-section">
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress"></div>
+    </div>
+
+    <!-- Instructions Section -->
+    <div class="instructions">
+        <p>Welcome! Scan the QR code to begin.</p>
+    </div>
+
+    <!-- Buttons Section -->
+    <div class="buttons">
+        <button>Start Over</button>
+    </div>
+</div>
+
+</body>
+</html>
