@@ -64,7 +64,7 @@
         .buttons {
             text-align: center;
         }
-        .buttons button {
+        .buttons a {
             padding: 12px 24px;
             margin: 10px;
             border: none;
@@ -74,7 +74,7 @@
             font-size: 16px;
             cursor: pointer;
         }
-        .buttons button:hover {
+        .buttons a:hover {
             background-color: #3e6b44;
         }
     </style>
@@ -82,12 +82,22 @@
 <body>
 
 <!-- Left QR Section -->
+ 
+    
 <div class="qr-section">
+    <% if(!error){ %>
     <img src="<%= data %>" alt="QR Code">
+    <% }else{ %>
+        <p>Please generate new QR Code</p>
+    <% } %>
 </div>
 
 <!-- Right Panel Section -->
 <div class="panel-section">
+    <form method="POST" id="autoload">
+        <input type="hidden" name ="id" value="<%= id %>">
+    </form>
+
     <!-- Progress Bar -->
     <div class="progress-bar">
         <div class="progress"></div>
@@ -100,9 +110,15 @@
 
     <!-- Buttons Section -->
     <div class="buttons">
-        <button>Start Over</button>
+        <a href="/">Start Over</a>
     </div>
 </div>
-
+<% if(!error){ %>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('autoload').submit();
+        });
+</script>
+<% } %>
 </body>
 </html>
