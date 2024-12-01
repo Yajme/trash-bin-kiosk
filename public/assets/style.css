@@ -1,0 +1,62 @@
+body {
+    margin: 0; 
+    font-family: Arial, sans-serif; 
+    display: flex; 
+    height: 100vh; 
+}
+.left {
+    flex: 60%; 
+    background-color: white; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px; 
+}
+.right {
+    flex: 40%; 
+    background-color: #F6FCDF; 
+    display: flex; 
+    flex-direction: column; /* Allow stacking of elements */
+    justify-content: flex-start; 
+    align-items: center; 
+    padding: 20px; 
+}
+img {
+    width: 60%; 
+    height: auto; 
+}
+.progress-bar {
+    width: 100%; 
+    background-color: #e0e0e0; 
+    border-radius: 5px; 
+    margin-bottom: 20px; 
+}
+
+.steps {
+    display: flex; 
+    justify-content: space-between; 
+    width: 100%; 
+    margin-top: 5px; 
+}
+.step {
+    flex: 1; 
+    text-align: center; 
+}
+h2 {
+    margin-top: -10px; /* Adjust this value to decrease or increase space */
+}
+h3 {
+    margin-top: 265px; /* Add margin to create space below the h1 */
+}
+.action-button {
+    background-color: #31511E; /* Button background color */
+    color: white; /* Button text color */
+    border: none; /* Remove border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 25px 35px; /* Padding for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin-top: 10px; /* Space above the buttons */
+    font-size: 20px; /* Font size for better visibility */
+    width: 200px; /* Fixed width for buttons */
+    margin-top: 20px; /* Adjusted margin to position the button higher */
+}

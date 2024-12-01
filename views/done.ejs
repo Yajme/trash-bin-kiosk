@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing...</title>
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        .progress {
+            height: 10px; 
+            width: 100%; /* Represents 2 out of 3 steps completed */
+            background-color: #76c7c0; 
+            border-radius: 5px; 
+        }
+       
+    </style>
+</head>
+<body>
+    <div class="left">
+        <img src="<%= data %>" alt="QR Code"> <!-- Replace with your QR code image path -->
+    </div>
+    <div class="right">
+        <div class="progress-bar">
+            <div class="progress"></div>
+        </div>
+        <h1>Processing...</h1> 
+    </div>
+</body>
+</html>

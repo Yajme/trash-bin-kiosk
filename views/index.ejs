@@ -3,81 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carousel Screen</title>
+    <title>Document</title>
     <style>
-   * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-html, body {
-    height: 100%;
-    width: 100%;
-    font-family: Arial, sans-serif;
-    background-color: #f7fbe2; /* Light green background */
-}
-
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-}
-
-.carousel-placeholder {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5em;
-    color: #333;
-    background-color: white;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.button-container {
-    background-color: #f7fbe2;
-    padding: 20px;
-    text-align: center;
-}
-
-.get-started-button {
-    background-color: #2d6a4f;
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    outline: none;
-    width: 100%;
-}
-
-.get-started-button:hover {
-    background-color: #1b4332;
-}
-
+        body {
+            margin: 0; /* Remove default margin */
+            font-family: Arial, sans-serif; /* Set a default font */
+            height: 100vh; /* Set height to 100% of the viewport height */
+            display: flex; /* Use flexbox to center content */
+            flex-direction: column; /* Stack children vertically */
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
+            position: relative; /* Position relative for footer alignment */
+        }
+        .carousel {
+            position: relative;
+            width: 100%; /* Set width to 100% for responsiveness */
+            max-width: 800px; /* Increase max width for larger screens */
+            height: 500px; /* Set a fixed height for the carousel */
+            overflow: hidden; /* Hide overflow */
+            flex: 1; /* Allow the carousel to grow and take available space */
+        }
+        .carousel-images {
+            display: flex; /* Use flexbox to arrange images */
+            transition: transform 0.5s ease; /* Smooth transition for sliding */
+            height: 100%; /* Set height to 100% for images */
+        }
+        .carousel img {
+            width: 100%; /* Make images responsive */
+            height: 100%; /* Set height to 100% to fill the carousel */
+            object-fit: cover; /* Maintain aspect ratio and cover the container */
+            display: block; /* Remove bottom space under images */
+        }
+        .carousel-button {
+            position: absolute;
+            top: 50%; /* Center vertically */
+            transform: translateY(-50%); /* Center the button */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            border: none; /* Remove border */
+            padding: 10px; /* Add padding */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+        .prev {
+            left: 10px; /* Position left button */
+        }
+        .next {
+            right: 10px; /* Position right button */
+        }
+        footer {
+            background-color: #F6FCDF;
+            padding: 20px; /* Optional: Add some padding */
+            text-align: center; /* Center the content */
+            width: 100%; /* Ensure footer takes full width */
+            position: fixed; /* Fix footer at the bottom */
+            bottom: 0; /* Align footer to the bottom */
+        }
+        .get-started-button {
+            background-color: #31511E; /* Button background color */
+            color: white; /* Button text color */
+            border: none; /* Remove default border */
+            padding: 20px 30px; /* Add padding to the button */
+            font-size: 24px; /* Font size */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            border-radius: 10px; /* Increase rounded corners */
+        }
+        .get-started-button:hover {
+            opacity: 0.8; /* Optional: Change opacity on hover */
+        }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <div class="carousel-placeholder">
-            <p>Insert Carousel Here</p>
+    
+    <div class="carousel">
+        <div class="carousel-images">
+            <img src="assets/img/recycling-image1.jpg" alt="Recycling Image 1">
+            <img src="assets/img/recycling-image2.jpg" alt="Recycling Image 2">
+            <img src="assets/img/recycling-image3.jpg" alt="Recycling Image 3">
         </div>
-        <div class="button-container">
-            <a class="get-started-button" href="/start">Get Started</a>
-        </div>
+        <button class="carousel-button prev" onclick="moveSlide(-1)">❮</button>
+        <button class="carousel-button next" onclick="moveSlide(1)">❯</button>
     </div>
+
+    <footer>
+        <a class="get-started-button"href="/start">Get Started</a>
+    </footer>
+    
+    <script>
+        let currentIndex = 0;
+    
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.carousel-images img');
+            if (index >= slides.length) {
+                currentIndex = 0;
+            } else if (index < 0) {
+                currentIndex = slides.length - 1;
+            } else {
+                currentIndex = index;
+            }
+            const offset = -currentIndex * 100; // Each image takes up 100% of the carousel width
+            document.querySelector('.carousel-images').style.transform = `translateX(${offset}%)`;
+        }
+    
+        function moveSlide(direction) {
+            showSlide(currentIndex + direction);
+        }
+    
+        // Automatically slide to the next image every 3 seconds
+        setInterval(() => {
+            showSlide(currentIndex + 1);
+        }, 3000);
+    
+        // Initialize the carousel
+        showSlide(currentIndex);
+    
+       
+    </script>
 
 </body>
 </html>

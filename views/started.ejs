@@ -17,23 +17,23 @@
             background-color: #f5f9ed;
         }
         .qr-section {
-            flex: 3; /* Occupies 3/4 of the page */
+            flex: 3; 
             display: flex;
             justify-content: center;
             align-items: center;
             background-color: #fff;
             border-right: 1px solid #ccc;
-            padding: 0; /* Remove padding to maximize space */
+            padding: 0; 
         }
         .qr-section img {
-            max-width: 90%; /* Image takes up 90% of the QR section */
-            max-height: 90%; /* Ensures the image stays responsive */
+            max-width: 90%; 
+            max-height: 90%; 
             width: auto;
             height: auto;
             border: 1px solid #ccc;
         }
         .panel-section {
-            flex: 1; /* Occupies 1/4 of the page */
+            flex: 1; 
             padding: 40px;
             background-color: #f5f9ed;
             display: flex;
@@ -52,8 +52,12 @@
         .progress-bar .progress {
             height: 100%;
             background: #4b7f52;
-            width: 33%; /* Adjust percentage for progress */
+            width: 33%; 
             transition: width 0.3s;
+        }
+        img {
+            width: 60%; 
+            height: auto; 
         }
         .instructions {
             margin-bottom: 20px;
@@ -96,6 +100,7 @@
 <div class="panel-section">
     <form method="POST" id="autoload">
         <input type="hidden" name ="id" value="<%= id %>">
+        <input type="hidden" name ="qrcode" value="<%= qrcode %>">
     </form>
 
     <!-- Progress Bar -->
