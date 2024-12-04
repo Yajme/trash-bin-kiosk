@@ -70,11 +70,13 @@ app.use(cookieParser());
 app.set(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'public')));
 //firebase.initializeFirebase();
-const test_mode = true;
+
+const test_mode = false;
 app.get('/command',(req,res)=>{
     const command = req.query.category;
-    const angle = req.query.angle;
+    const angle = Number(req.query.angle);
 
+    
     sendCommand(`${command} ${angle} `);
     res.send(`${command} ${angle} `);
 });
@@ -118,7 +120,7 @@ app.get('/process', async (req,res,next)=>{
             data : qrCodeImage
         }
     );
-
+let counter = 0;
     // Run the Python script
     if(!test_mode){
         runPythonScript('/home/pi/Desktop/picam_test.py')
@@ -127,12 +129,8 @@ app.get('/process', async (req,res,next)=>{
             req.session.jsonData = jsonData;
             console.log(req.session.jsonData);
             const category = jsonData[0].category;
-            sendCommand(`${category} 125`);
-            sendCommand('go');
-
-            setInterval(()=>{
-                sendCommand('stop');
-            },10000);
+            runConveyorBelt(category);
+            console.log(counter++);
             console.log(jsonData);
         })
         .catch((error) => {
@@ -147,6 +145,39 @@ app.get('/process', async (req,res,next)=>{
 
 });
 
+let conveyorInterval; // Variable to store the interval ID for the conveyor
+let stopInterval;
+const categoryCommands = {
+    plastic : 145,
+    glass : 145,
+    paper : 45,
+    cardboard : 45
+};
+function runConveyorBelt(category) {
+    console.log('Running conveyor belt');
+    console.log('Garbage classification: ' + category);
+
+    if (category !== 'metal' && category !== 'trash') {
+        var angle = categoryCommands[category];
+        sendCommand(`${category} ${angle}`);
+    }
+
+    // Start the conveyor belt
+    sendCommand('go');
+
+    // Set an interval to stop the conveyor belt
+    stopInterval = setTimeout(() => {
+        sendCommand('stop');
+        console.log('Conveyor belt stopped');
+    }, 10000); // Stop after 10 seconds
+
+    // Adjust the servo angle after 5 seconds
+    if (category !== 'metal' && category !== 'trash') {
+        conveyorInterval = setTimeout(() => {
+            sendCommand(`${category} 90`);
+        }, 5000);
+    }
+}
 // Function to run Python script
 function runPythonScript(scriptPath) {
     return new Promise((resolve, reject) => {

@@ -1,62 +1,96 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
 body {
-    margin: 0; 
-    font-family: Arial, sans-serif; 
-    display: flex; 
-    height: 100vh; 
+    display: flex;
+    min-height: 100vh;
+    background-color: #f5f9ed;
 }
+
 .left {
-    flex: 60%; 
-    background-color: white; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    padding: 20px; 
+    flex: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-right: 1px solid #ccc;
+    padding: 0;
 }
+
+.left img {
+    max-width: 90%;
+    max-height: 90%;
+    width: auto;
+    height: auto;
+    border: 1px solid #ccc;
+}
+
 .right {
-    flex: 40%; 
-    background-color: #F6FCDF; 
-    display: flex; 
-    flex-direction: column; /* Allow stacking of elements */
-    justify-content: flex-start; 
-    align-items: center; 
-    padding: 20px; 
+    flex: 1;
+    padding: 40px;
+    background-color: #f5f9ed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; /* Center align content horizontally */
+    text-align: center; /* Center align text */
 }
-img {
-    width: 60%; 
-    height: auto; 
-}
+
 .progress-bar {
-    width: 100%; 
-    background-color: #e0e0e0; 
-    border-radius: 5px; 
-    margin-bottom: 20px; 
+    height: 10px;
+    width: 100%;
+    background: #eee;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar .progress {
+    height: 100%;
+    background-color: #76c7c0;
+    width: 66.67%; /* Represents 2 out of 3 steps completed */
+    border-radius: 5px;
+    transition: width 0.3s;
 }
 
 .steps {
-    display: flex; 
-    justify-content: space-between; 
-    width: 100%; 
-    margin-top: 5px; 
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 18px;
+    text-align: center;
 }
-.step {
-    flex: 1; 
-    text-align: center; 
+
+.detected {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 10px;
 }
-h2 {
-    margin-top: -10px; /* Adjust this value to decrease or increase space */
+
+h3, h4 {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 16px;
 }
-h3 {
-    margin-top: 265px; /* Add margin to create space below the h1 */
-}
+
 .action-button {
-    background-color: #31511E; /* Button background color */
-    color: white; /* Button text color */
-    border: none; /* Remove border */
-    border-radius: 10px; /* Rounded corners */
-    padding: 25px 35px; /* Padding for the button */
-    cursor: pointer; /* Pointer cursor on hover */
-    margin-top: 10px; /* Space above the buttons */
-    font-size: 20px; /* Font size for better visibility */
-    width: 200px; /* Fixed width for buttons */
-    margin-top: 20px; /* Adjusted margin to position the button higher */
+    display: inline-block;
+    padding: 12px 24px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4b7f52;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #3e6b44;
 }
