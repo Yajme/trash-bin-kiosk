@@ -17,33 +17,47 @@
             align-items: center;
             height: 100vh; /* Full height */
             margin: 0; /* Remove default margin */
+            padding: 1em; /* Add some padding for smaller screens */
+            box-sizing: border-box; /* Include padding in height/width calculations */
         }
         h1 {
             font-family: 'Inter', sans-serif;
             color: #859F3D;
             font-weight: bold;
-            font-size: 5em; /* Adjust size as needed */
+            font-size: 5vw; /* Responsive font size */
             text-shadow: 2px 2px 0px #31511E, 
                 -2px -2px 0px #31511E, 
                 2px -2px 0px #31511E, 
                 -2px 2px 0px #31511E; /* Black outline effect */
-            }
+            text-align: center; /* Center text */
+            margin: 0; /* Remove default margin */
+            margin-bottom: 2em;
+        }
         .button {
             font-family: 'Inter', sans-serif;
             background-color: #31511E; /* Button color */
             color: white; /* Text color */
-            font-size: 2.5em; /* Adjust size as needed */
+            font-size: 1.5vw; /* Responsive font size */
             border: none; /* Remove default border */
-            padding: 20px 30px; /* Add some padding */
+            padding: 1em 2em; /* Add some padding */
             cursor: pointer; /* Change cursor to pointer */
-            margin-top: 20px; /* Space between heading and button */
+            margin-top: 2em; /* Space between heading and button */
             border-radius: 10px; /* Rounded corners */
             text-decoration: none; /* Remove underline */
             display: inline-block; /* Allow padding and margin */
-            margin-top: 8em; /* Adjust margin as needed */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
         }
         .button:hover {
             background-color: #2a3e15; /* Darker shade on hover */
+        }
+        @media (max-width: 800px) {
+            h1 {
+                font-size: 5vw; /* Adjust font size for smaller screens */
+            }
+            .button {
+                font-size: 4vw; /* Adjust button font size for smaller screens */
+                padding: 20px; /* Adjust padding for smaller screens */
+            }
         }
     </style>
 </head>
