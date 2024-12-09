@@ -24,13 +24,19 @@
             <div class="progress"></div>
         </div>
         <h1>Processing...</h1> 
+        <% if(error){ %>
+            <a class="action-button" href="/">Restart Process</a>
+            <h4> <%= error%></h4>
+            <% } %>
+        <form method="POST" id="autoload">
+        </form>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-               setTimeout(() => {
-                window.location.href = '/thankyou'
-               }, 5000);
-            });
-    </script>
+    <% if(!error){ %>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                    document.getElementById('autoload').submit();
+                });
+        </script>
+        <% } %>
 </body>
 </html>

@@ -16,8 +16,10 @@
 </head>
 <body>
     <div class="left">
-        <img src="<%= data %>" alt="QR Code"> <!-- Replace with your QR code image path -->
+        <img src="<%= data %>" alt="QR Code"> 
+       <!-- Replace with your QR code image path -->
     </div>
+    
     <div class="right">
         <div class="progress-bar">
             <div class="progress"></div>
@@ -25,10 +27,10 @@
         <div class="steps">
         </div>
         <h1 class="detected"></h1> 
-        <h3>Please Continue Placing Items One at a Time.</h3>
         <h4>Ready to complete? Press 'Finish' to finalize the process.</h4>
         
         <a class="action-button" href="/done">Finish</a>
+        <a class="action-button" href="/process">New Item</a>
         <a class="action-button" href="/">Restart Process</a>
     </div>
 </body>

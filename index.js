@@ -7,12 +7,32 @@ import axios from "axios";
 import cookieParser from 'cookie-parser';
 import { spawn } from 'child_process';
 import session from "express-session";
-
-
+import { initSupabase } from "./controller/supabase.js";
+import { createClient } from '@supabase/supabase-js';
 
 import firebase from './controller/firebase.js';
 import { SerialPort, ReadlineParser } from 'serialport';
 
+const cache = {};
+
+// Function to set data in cache
+function setCache(key, value) {
+  cache[key] = { value, timestamp: Date.now() };
+}
+
+// Function to get data from cache
+function getCache(key, ttl) {
+  const cachedItem = cache[key];
+  if (!cachedItem) return null;
+
+  // Check if the cache has expired
+  if (Date.now() - cachedItem.timestamp > ttl * 1000) {
+    delete cache[key];
+    return null;
+  }
+
+  return cachedItem.value;
+}
 
 // Configure the serial port
 const port = new SerialPort({
@@ -49,6 +69,7 @@ parser.on('data', (data) => {
 port.on('error', (err) => {
   console.error('Serial Port Error:', err.message);
 });
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -70,8 +91,26 @@ app.use(cookieParser());
 app.set(express.static(path.join(__dirname, 'views')));
 app.use(express.static(path.join(__dirname, 'public')));
 //firebase.initializeFirebase();
+const supabase_url = process.env.SUPABASE_URL;
+const supabase_anon_key = process.env.SUPABASE_ANON_KEY;
+console.log(supabase_url);
+console.log(supabase_anon_key);
+const supabase = createClient(supabase_url, supabase_anon_key);
+supabase
+  .channel('realtime:qrcode')
+  .on(
+    'postgres_changes',
+    { event: '*', schema: 'public', table: 'qrcode' },
+    (payload) => {
+      console.log('Real-time change:', payload);
+    }
+  )
+  .subscribe();
+  
 
-const test_mode = false;
+
+
+const test_mode = process.env.ENVIRONMENT === 'PRODUCTION' ? false : process.env.ENVIRONMENT === 'DEVELOPMENT' ? true : null;
 app.get('/command',(req,res)=>{
     const command = req.query.category;
     const angle = Number(req.query.angle);
@@ -111,26 +150,32 @@ app.get("/start", async (req, res, next) => {
     });
 });
 app.get('/process', async (req,res,next)=>{
-    console.log(req.cookies);
-    const code= req.cookies.qrcode;
-    console.log(code);
+    const code= req.cookies.qrcode ?? 'qrcode';
+    
     const qrCodeImage = await qrcode.toDataURL(code);
     res.render('process',
         {
             data : qrCodeImage
         }
     );
-let counter = 0;
+req.session.jsonData = [];
     // Run the Python script
     if(!test_mode){
         runPythonScript('/home/pi/Desktop/picam_test.py')
         .then((jsonData) => {
             // Store the JSON data in session
-            req.session.jsonData = jsonData;
-            console.log(req.session.jsonData);
+            const cache = getCache('records',60);
+            if(!cache){
+                let records = jsonData;
+                setCache('records',records);
+            }else{
+                setCache('record',jsonData[0]);
+                cache.push(jsonData[0])
+                setCache('records',cache);
+            }
+            
             const category = jsonData[0].category;
             runConveyorBelt(category);
-            console.log(counter++);
             console.log(jsonData);
         })
         .catch((error) => {
@@ -169,7 +214,7 @@ function runConveyorBelt(category) {
     stopInterval = setTimeout(() => {
         sendCommand('stop');
         console.log('Conveyor belt stopped');
-    }, 10000); // Stop after 10 seconds
+    }, 15000); // Stop after 15 seconds
 
     // Adjust the servo angle after 5 seconds
     if (category !== 'metal' && category !== 'trash') {
@@ -220,29 +265,23 @@ app.get('/done', async (req, res, next) => {
         const code = req.cookies.qrcode; // Retrieve the QR code from the cookie
         const qrCodeImage = await qrcode.toDataURL(code); // Generate the QR code image
 
-        // Get the JSON data that was stored in the session
-        const jsonData = req.session.jsonData;
-
-        if (!jsonData) {
-            throw new Error("No data available for registration.");
-        }
-
-        // Simulating waste record creation using jsonData from Python script
-        const wasteRecordsData = {
-            category: jsonData.category, 
-            created_at: jsonData.records,
-            points: jsonData.points,
-            user: jsonData.user,
-            weight: jsonData.weight
-        };
-
-        // Call the registerWasteRecords function with the data
-        //await registerWasteRecords(wasteRecordsData, res, next);
-        //await axios.post('https://trash-bin-api.vercel.app/waste/register', wasteRecordsData);
-        // Respond with the 'done' page and the QR code image
+const records = [
+    {
+        category : 'paper',
+        weight : 1,
+        points : 5
+    },
+    {
+        category : 'metal',
+        weight : 1,
+        points : 2
+    }
+];
+setCache('records',records);
         res.render('done', {
             data: qrCodeImage,
-            message: 'Waste records have been successfully registered!'
+            message: 'Waste records have been successfully registered!',
+            error: null
         });
     } catch (error) {
         const qrCodeImage = await qrcode.toDataURL(error.message);
@@ -253,31 +292,64 @@ app.get('/done', async (req, res, next) => {
         });
     }
 });
+app.post('/done', async (req,res,next)=>{
+    try {
+        const jsonData = getCache('records',60);
+    if (!jsonData) {
+        throw new Error("No data available for registration.");
+    }
 
+    // Simulating waste record creation using jsonData from Python script
+    const wasteRecordsData = {
+        records : jsonData,
+        user_id : req.session.user_id
+    };
+
+    // Call the registerWasteRecords function with the data
+    await axios.post('https://trash-bin-api.vercel.app/waste/register', wasteRecordsData);
+    // Respond with the 'done' page and the QR code image
+    res.redirect('/thankyou');
+    } catch (error) {
+        console.log(error);
+        const qrCodeImage = await qrcode.toDataURL(error.message);
+        console.error("Error processing /done:", error);
+        res.render('done', {
+            data: qrCodeImage,
+            error: 'Failed to register waste records.'
+        });
+    }
+});
 app.get('/thankyou',(req,res,next)=>{
     res.render('thankyou');
 })
 app.post("/start", async (req,res,next)=>{
     //Replace the url to real link
     const url = 'https://trash-bin-api.vercel.app/waste/check-scan?id=' + req.body.id;
-    const scanned = pollScanStatus(url,24,res);
+    const scanned = pollScanStatus(url,24,res,0,next);
     
-});
+},(req,res,next)=>{
+    console.log(res.locals.data);
+    req.session.user_id = res.locals.data.user;
+    res.redirect('/process');
+}
+);
 
-async function pollScanStatus(url, limit=24,res,count=0) {
+async function pollScanStatus(url, limit=6,res,count=0,next) {
     try {
         count++;
         console.log(url);
-        console.log("attempt :" + count);
+        console.log(`attempt :  ${count}`);
         
         const response = await fetch(url);
         const data = await response.json();
         if(count <= limit){
             if (data.scanned) {
+                
                 console.log('QR Code was scanned!');
-                res.redirect('/process');
+                res.locals.data = data;
+                next();
             } else {
-                setTimeout(() => pollScanStatus(url,limit,res,count), 10000); // Poll every second
+                setTimeout(() => pollScanStatus(url,limit,res,count,next), 5000); // Poll every second
             }
         }else{
             throw new Error('poll reached its limit');
@@ -285,8 +357,9 @@ async function pollScanStatus(url, limit=24,res,count=0) {
     } catch (error) {
         res.render('started',{
             error: error,
-            id: ''
-        })
+            id: '',
+            qrcode :''
+        });
     } 
 }
 const PORT = process.env.PORT;
