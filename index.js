@@ -265,19 +265,7 @@ app.get('/done', async (req, res, next) => {
         const code = req.cookies.qrcode; // Retrieve the QR code from the cookie
         const qrCodeImage = await qrcode.toDataURL(code); // Generate the QR code image
 
-const records = [
-    {
-        category : 'paper',
-        weight : 1,
-        points : 5
-    },
-    {
-        category : 'metal',
-        weight : 1,
-        points : 2
-    }
-];
-setCache('records',records);
+
         res.render('done', {
             data: qrCodeImage,
             message: 'Waste records have been successfully registered!',
