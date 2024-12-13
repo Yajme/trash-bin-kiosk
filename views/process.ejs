@@ -9,15 +9,69 @@
       .progress {
     height: 10px; 
     width: 66.67%; /* Represents 2 out of 3 steps completed */
-    background-color: #76c7c0; 
+    background-color:  #4b7f52; 
     border-radius: 5px; 
+}
+.table_component {
+    max-height: 300px; /* Set the max height for the table */
+    overflow-y: auto;  /* Enable vertical scrolling */
+    width: 100%;
+}
+
+.table_component table {
+    border: 1px solid #dededf;
+    height: 100%;
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border-spacing: 1px;
+    text-align: left;
+}
+
+.table_component caption {
+    caption-side: top;
+    text-align: left;
+}
+
+.table_component th {
+    border: 1px solid #dededf;
+    background-color: #4b7f52;
+    color: #F5F5F5;
+    padding: 5px;
+}
+
+.table_component td {
+    border: 1px solid #dededf;
+    background-color: #ffffff;
+    color: #000000;
+    padding: 5px;
 }
     </style>
 </head>
 <body>
     <div class="left">
-        <img src="<%= data %>" alt="QR Code"> 
-       <!-- Replace with your QR code image path -->
+        <div class="image">
+            <img src="<%= data %>" alt="QR Code"> 
+        </div>
+        
+       <div id="component">
+        <p class="loading"></p>
+        <div class="table_component" role="region" tabindex="0">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Weight</th>
+                        <th>Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+    
+                </tbody>
+            </table>
+           </div></div>
+       
+       <p class="detected"></p>
     </div>
     
     <div class="right">
@@ -26,13 +80,15 @@
         </div>
         <div class="steps">
         </div>
-        <h1 class="detected"></h1> 
+        
         <h4>Ready to complete? Press 'Finish' to finalize the process.</h4>
         
         <a class="action-button" href="/done">Finish</a>
-        <a class="action-button" href="/process">New Item</a>
+        <button class="action-button" id="send-message">Scan Item</button>
         <a class="action-button" href="/">Restart Process</a>
+        
     </div>
+    <script type="module" src="/assets/script.js"></script>
 </body>
 
 </html>

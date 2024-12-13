@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sensors and Controllers</title>
+    <style>
+        /* General container styling for alignment */
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+}
+
+/* Label styling */
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Dropdown styling */
+#category {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+}
+
+#category:focus {
+  border-color: #007bff;
+}
+
+/* Input field styling */
+#angle {
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+}
+
+#angle:focus {
+  border-color: #007bff;
+}
+
+/* Add a subtle hover effect for inputs */
+#category:hover, #angle:hover {
+  border-color: #007bff;
+}
+
+        .action-button {
+    display: inline-block;
+    padding: 12px 24px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4b7f52;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    </style>
+</head>
+    <body>
+        <label for="dropdown">Choose a category:</label>
+        <select id="category">
+            <option value="plastic">plastic</option>
+            <option value="glass">glass</option>
+            <option value="paper">paper</option>
+            <option value="cardboard">cardboard</option>
+        </select>
+        <input type="text" placeholder="angle" id="angle">
+        <button id="send" class="action-button">Send</button>
+        <button id="start"class="action-button">Start</button>
+        <button id="stop"class="action-button">Stop</button>
+        <script type="module">
+            import { io } from "https://cdn.socket.io/4.8.1/socket.io.esm.min.js";
+            const socket = io("ws://localhost:8080");
+
+            // connection with server
+            socket.on('connect', function () {
+                console.log('Connected to Server');
+            });
+            socket.on('disconnect', function () {
+                console.log('Disconnected from server');
+            });
+            document.getElementById('send').addEventListener('click',(e)=>{
+                const category = document.querySelector('#category').value;
+                const angle = document.querySelector('#angle').value;
+
+                socket.emit('serial-command',{
+                    category : category,
+                    angle : angle
+                });
+            });
+            document.getElementById('start').addEventListener('click',(e)=>{
+                socket.emit('serial-command',{
+                    conveyor_status : 'go'
+                });
+            });
+            document.getElementById('stop').addEventListener('click',(e)=>{
+                socket.emit('serial-command',{
+                    conveyor_status  : 'stop'
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -9,7 +9,7 @@
         .progress {
             height: 10px; 
             width: 100%; /* Represents 2 out of 3 steps completed */
-            background-color: #76c7c0; 
+            background-color: #4b7f52; 
             border-radius: 5px; 
         }
        
@@ -25,8 +25,14 @@
         </div>
         <h1>Processing...</h1> 
         <% if(error){ %>
-            <a class="action-button" href="/">Restart Process</a>
+            <button class="action-button" class="retry-process" onclick="retry();">Retry</button>
+            <a class="action-button" href="/">Exit</a>
             <h4> <%= error%></h4>
+            <script>
+                function retry(){
+                    document.getElementById('autoload').submit();
+                }
+            </script>
             <% } %>
         <form method="POST" id="autoload">
         </form>
