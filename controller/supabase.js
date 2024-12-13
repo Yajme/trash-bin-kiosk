@@ -12,7 +12,7 @@ const supabase = createClient(supabase_url, supabase_anon_key);
 
 
 
-  const initSupabase=()=>{
+  const initSupabase=(realtime)=>{
 // Subscribe to changes in a specific table
 supabase
   .channel('realtime:qrcode')
@@ -20,7 +20,9 @@ supabase
     'postgres_changes',
     { event: '*', schema: 'public', table: 'qrcode' },
     (payload) => {
-      console.log('Real-time change:', payload);
+      const indexed_payload = payload.new;
+      realtime(indexed_payload);
+      console.log('Real-time change:', indexed_payload);
     }
   )
   .subscribe();
