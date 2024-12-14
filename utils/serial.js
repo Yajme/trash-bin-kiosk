@@ -39,10 +39,10 @@ try{
         baudRate: 19200, 
       });
            // Set up a parser to read data line by line
-  const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }));
+  const parser = port_ultrasonic.pipe(new ReadlineParser({ delimiter: '\n' }));
    
   // Open the port and handle events
-  port.on('open', () => {
+  port_ultrasonic.on('open', () => {
     console.log('Serial Port Ultrasonic Opened');
   });
   
@@ -52,7 +52,7 @@ try{
   });
   
   // Handle errors
-  port.on('error', (err) => {
+  port_ultrasonic.on('error', (err) => {
     console.error('Serial Port Error:', err.message);
   });
     }catch(error){
