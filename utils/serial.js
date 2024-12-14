@@ -35,7 +35,7 @@ try{
   const initSerialUltrasonic = () =>{
     try{
       port_ultrasonic = new SerialPort({
-        path: '/dev/ttyACM1', // Replace with your serial port path
+        path: '/dev/ttyUSB0', // Replace with your serial port path
         baudRate: 19200, 
       });
            // Set up a parser to read data line by line
