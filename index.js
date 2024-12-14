@@ -10,7 +10,7 @@ import session from "express-session";
 import { initSupabase } from "./controller/supabase.js";
 
 import firebase from './controller/firebase.js';
-import {initSerial,sendCommand} from './utils/serial.js';
+import {initSerial,initSerialUltrasonic,sendCommand} from './utils/serial.js';
 import { initSocket,QRcodeScanned } from "./controller/socket.js";
 
 import http from 'http';
@@ -49,7 +49,7 @@ initSocket(server,
     });
 initSupabase(QRcodeScanned);
 initSerial();
-
+initSerialUltrasonic();
 
 
 

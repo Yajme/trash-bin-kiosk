@@ -15,8 +15,6 @@ try{
   // Open the port and handle events
   port.on('open', () => {
     console.log('Serial Port Opened');
-  
-    
   });
   
   // Listen for data from the Arduino
@@ -33,8 +31,34 @@ try{
     console.log(error);
 }
 }
- 
+ let port_ultrasonic;
+  const initSerialUltrasonic = () =>{
+    try{
+      port_ultrasonic = new SerialPort({
+        path: '/dev/ttyACM1', // Replace with your serial port path
+        baudRate: 19200, 
+      });
+           // Set up a parser to read data line by line
+  const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }));
+   
+  // Open the port and handle events
+  port.on('open', () => {
+    console.log('Serial Port Ultrasonic Opened');
+  });
   
+  // Listen for data from the Arduino
+  parser.on('data', (data) => {
+    console.log(`Arduino: ${data.trim()}`);
+  });
+  
+  // Handle errors
+  port.on('error', (err) => {
+    console.error('Serial Port Error:', err.message);
+  });
+    }catch(error){
+      console.log(error);
+    }
+  }
   // Function to send commands to the serial port
   function sendCommand(command) {
     console.log(`Sending: ${command}`);
@@ -48,5 +72,6 @@ try{
   
 export {
     initSerial,
+    initSerialUltrasonic,
     sendCommand
 }
