@@ -11,7 +11,7 @@ import { initSupabase } from "./controller/supabase.js";
 
 import firebase from './controller/firebase.js';
 import {initSerial,initSerialUltrasonic,sendCommand} from './utils/serial.js';
-import { initSocket,QRcodeScanned } from "./controller/socket.js";
+import { initSocket,QRcodeScanned,BroadcastDistance } from "./controller/socket.js";
 
 import http from 'http';
 import cors from 'cors';
@@ -49,7 +49,11 @@ initSocket(server,
     });
 initSupabase(QRcodeScanned);
 initSerial();
-initSerialUltrasonic();
+initSerialUltrasonic(
+    {
+        BroadcastDistance : BroadcastDistance
+    }
+);
 
 
 

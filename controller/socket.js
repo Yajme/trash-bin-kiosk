@@ -1,12 +1,15 @@
 import {Server} from 'socket.io';
 import cache from 'memory-cache';
+import dotenv from 'dotenv';
+dotenv.config();
+const PORT = process.env.PORT;
 let io;
 const initSocket = (server, callback) =>{
     
 io = new Server(
     server, {
         cors : {
-            origin: "http://localhost:8080", // Replace with your actual front-end URL
+            origin: "http://localhost:3000", // Replace with your actual front-end URL
             methods: ["GET", "POST"],
         }
     }
@@ -20,7 +23,7 @@ io.on('connection',
         
          // Join a room
          socket.join('room1');
-        
+       
 
         // listen for message from user
         socket.on('createMessage',
@@ -41,7 +44,7 @@ io.on('connection',
         socket.on('begin-process',
             (message)=>{
                 //Production directory = /home/pi/Desktop/picam_test.py
-                callback.run('/home/yajme/demo.py').then((jsonData) => {
+                callback.run('/home/pi/Desktop/picam_test.py').then((jsonData) => {
                     
                     let records = cache.get('records') ?? [];
                     if(records && records instanceof Array){
@@ -77,8 +80,12 @@ io.on('connection',
         io.to('room1').emit('room-message', {from :'server', message: 'QR Code successfully scanned', step:'next', payload: payload});
     }
 
-
+    function BroadcastDistance(payload){
+        //console.log("payload:",payload);
+        io.to('room1').emit('distance',{payload : payload});
+    }
 export {
     initSocket,
-    QRcodeScanned
+    QRcodeScanned,
+    BroadcastDistance
 }

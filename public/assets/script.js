@@ -2,7 +2,7 @@ import { io } from "https://cdn.socket.io/4.8.1/socket.io.esm.min.js";
 
   
 const socket = io(
-    "ws://localhost:8080"
+    "ws://localhost:80"
 );
 
 // connection with server

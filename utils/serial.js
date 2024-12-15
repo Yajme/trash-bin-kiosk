@@ -32,7 +32,7 @@ try{
 }
 }
  let port_ultrasonic;
-  const initSerialUltrasonic = () =>{
+  const initSerialUltrasonic = (callback) =>{
     try{
       port_ultrasonic = new SerialPort({
         path: '/dev/ttyUSB0', // Replace with your serial port path
@@ -48,7 +48,10 @@ try{
   
   // Listen for data from the Arduino
   parser.on('data', (data) => {
-    console.log(`Arduino: ${data.trim()}`);
+    
+    const distance = JSON.parse(data.trim());
+    callback.BroadcastDistance(distance);
+    //console.log(distance);
   });
   
   // Handle errors

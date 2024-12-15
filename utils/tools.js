@@ -4,7 +4,7 @@ function runPythonScript(scriptPath) {
     return new Promise((resolve, reject) => {
         // Run the command in a bash shell to properly source the virtual environment
         //Production source /home/pi/pytorch/bin/activate && 
-        const pythonProcess = spawn('bash', ['-c', `python3 ${scriptPath}`]);
+        const pythonProcess = spawn('bash', ['-c', `source /home/pi/pytorch/bin/activate && python3 ${scriptPath}`]);
 
         let resultString = '';
         let errorString = '';
